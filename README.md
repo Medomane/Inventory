@@ -2,6 +2,8 @@
 
 Inventory Flutter project.
 
+## Demo
+![](https://github.com/Medomane/Inventory/blob/main/app/demo.gif?raw=true)
 ### Set server link
 ![server link](https://github.com/Medomane/Inventory/blob/main/app/img1.png?raw=true)
 ### Login
