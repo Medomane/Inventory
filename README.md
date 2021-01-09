@@ -23,8 +23,8 @@ Inventory Flutter project.
 ![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img12.png?raw=true)
 ### Item scanner
 ![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img13.png?raw=true)&nbsp;&nbsp;
-![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img15.png?raw=true)&nbsp;&nbsp;
-![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img14.png?raw=true)
+![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img14.png?raw=true)&nbsp;&nbsp;
+![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img15.png?raw=true)
 ### Scanner items
 ![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img16.png?raw=true)
 ### Synchronization history
