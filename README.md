@@ -31,5 +31,6 @@ Inventory Flutter project.
 ### Synchronization history
 ![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img18.png?raw=true)
 ### Settings
-### Report a problem
 ![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img19.png?raw=true)
+### Report a problem
+![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img20.png?raw=true)
