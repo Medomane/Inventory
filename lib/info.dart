@@ -19,7 +19,7 @@ class _InformationState extends State<Information> {
       drawer: AppDrawer(),
       body: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,25 +50,42 @@ class _InformationState extends State<Information> {
     list.add(SizedBox(height: 15.0));
     if(data == null) return list ;
     data.forEach((k,v) {
-      var val = v ;
+      var val = v,title = "" ;
       bool add = true;
-      var title = "" ;
+      Icon trail  ;
       switch(k){
-        case "inventory" : title = "Inventaire";break;
-        case "beginDate" : title = "Du";break;
-        case "endDate" : title = "Au";break;
-        case "team" : title = "Equipe";break;
-        case "username" : title = "Nom d'utilisateur";break;
+        case "inventory" :
+          title = "Inventaire";
+          trail = Icon(Icons.inventory);
+        break;
+        case "beginDate" :
+          title = "Du";
+          trail = Icon(Icons.not_started);
+          break;
+        case "endDate" :
+          title = "Au";
+          trail = Icon(Icons.close);
+          break;
+        case "team" :
+          title = "Equipe";
+          trail = Icon(Icons.people);
+        break;
+        case "username" :
+          title = "Nom d'utilisateur";
+          trail = Icon(Icons.subject);
+          break;
         case "role" :
           title = "Role";
           val = v == 0?"Résponsable":"Member";
+          trail = Icon(Icons.flag);
         break;
         default : add = false;
       }
       if(add) list.add(Card(
-          child: new ListTile(
-            title: new Text(title),
-            subtitle: new Text(val),
+          child: ListTile(
+            title: Text(title),
+            subtitle: Text(val),
+            trailing: trail,
           ),
         ));
     });

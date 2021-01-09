@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:responsive_table/DatatableHeader.dart';
@@ -30,38 +31,26 @@ class _SyncPageState extends State<SyncPage>{
       ),
       drawer: AppDrawer(),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Container(
-              margin: EdgeInsets.all(10),
-              padding: EdgeInsets.all(0),
-              constraints: BoxConstraints(
-                maxHeight: (MediaQuery. of(context).size.height)-160,
-              ),
-              child: Card(
-                elevation: 1,
-                shadowColor: Colors.black,
-                clipBehavior: Clip.none,
-                child: ResponsiveDatatable(
-                  headers: headers(context),
-                  source: _source,
-                  autoHeight: false,
-                  isLoading: _isLoading,
-                ),
-              ),
-            ),
-            RoundedLoadingButton(
-              child: Text("Synchroniser", style: TextStyle(color: Colors.white)),
-              controller: _btnController,
-              onPressed: (){
-                synchronize();
-              }
-            )
-          ]
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: (MediaQuery. of(context).size.height)-150,
+          ),
+          child: ResponsiveDatatable(
+            headers: headers(context),
+            source: _source,
+            autoHeight: false,
+            isLoading: _isLoading,
+          ),
         )
-      )
+      ),
+      floatingActionButton: RoundedLoadingButton(
+          child: Text("Synchroniser", style: TextStyle(color: Colors.white)),
+          controller: _btnController,
+          onPressed: (){
+            synchronize();
+          }
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
   @override
@@ -130,15 +119,15 @@ class _SyncPageState extends State<SyncPage>{
     );
     uploader.result.listen((event) async {
       if(event.statusCode == 200){
-        var path = await Func.downloadDb();
-        new Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
-          /*if((await File(path).exists())){
-            timer.cancel();
+        if(await Func.downloadDb()){
+          _btnController.success();
+          Future.delayed(const Duration(seconds: 5), () async {
             await Func.endLoading(btnController: _btnController,pd: pr);
             await Fluttertoast.showToast(msg: "Opération s'est déroulée avec succès",toastLength:Toast.LENGTH_LONG);
             _init();
-          }*/
-        });
+          });
+        }
+        else await Func.endLoading(btnController: _btnController);
       }
       else Func.errorToast('Erreur avec le statut: ${event.statusCode}.');
     },onError: (e) async {

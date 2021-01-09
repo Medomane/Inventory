@@ -9,6 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
+import 'scannerView.dart';
+
 
 class Func{
   static bool isNumeric(String s) {
@@ -16,7 +18,7 @@ class Func{
     return double.parse(s, (e) => null) != null;
   }
   static void errorToast(String content) => Fluttertoast.showToast(msg: content,backgroundColor: Colors.red,textColor: Colors.white,toastLength:Toast.LENGTH_LONG );
-  static bool isNull(String val) => val == null || val.trim() == "";
+  static bool isNull(String val) => val == null || val.trim() == "" || val.trim() == "null";
   static Future<void> updateBaseFolder() async {
     final String _appDocDir = await MyGlobal.getRoot();
     final Directory _appDocDirFolder =  Directory('$_appDocDir/${MyGlobal.dbFolder}');
@@ -94,6 +96,10 @@ class Func{
     if(pd != null) await pd.hide();
     return false;
   }*/
+
+  static Future<String> scan(BuildContext context) async {
+    return await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => QRCodeView()));
+  }
 
   static Future<void> endLoading({ProgressDialog pd,RoundedLoadingButtonController btnController}) async {
     if(btnController != null) await btnController.stop();

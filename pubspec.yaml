@@ -34,11 +34,14 @@ dependencies:
   intl:
   responsive_table: ^0.1.1+8
   progress_dialog:
-  qrscan: ^0.2.21
+  #qrscan: ^0.2.21
   flutter_launcher_icons: ^0.8.1
   connectivity:
   photo_view: ^0.10.3
   fl_chart: ^0.12.2
+  flutter_beep: ^0.2.0
+  vibration: ^1.7.3
+  qr_code_scanner: ^0.2.1
   #fl_animated_linechart: ^1.1.4
 
 

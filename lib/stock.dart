@@ -64,6 +64,7 @@ class _StockPageState extends State<StockPage>{
                   child: ListTile(
                     title: Text('Quantité : ${item['quantity']}'),
                     subtitle: Text('Date : '+formatted),
+                    trailing: Text('${item['item']}'),
                     onTap: () => Navigator.push(context, MaterialPageRoute(builder:(context)=>Item(item["item_id"],false))),
                   ),
                   confirmDismiss: (direction) async {

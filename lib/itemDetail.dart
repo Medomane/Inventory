@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
 
 import 'Helpers/func.dart';
 import 'Helpers/drawer.dart';
@@ -27,10 +26,10 @@ class _ItemState extends State<Item>{
   _ItemState(this.id,this.isScanner);
   @override
   Widget build(BuildContext context) {
-    double padding = 20;
+    double padding = 5;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Détail de l'article : $id"),
+        title: Func.isNull('$id')?Text("Détail"):Text("Détail de l'article : $id"),
       ),
       drawer: AppDrawer(),
       body: Center(
@@ -87,13 +86,29 @@ class _ItemState extends State<Item>{
     list.add(SizedBox(height: 15.0));
     data.forEach((k,v) {
       bool add = true;
-      var title = "" ;
+      String title = "" ;
+      var trail ;
       switch(k){
-        case "reference" : title = "Référence";break;
-        case "designation" : title = "Désignation";break;
-        case "code" : title = "Code";break;
-        case "family" : title = "Famille";break;
-        case "num" : title = "N°Lot/Serie";break;
+        case "reference" :
+          title = "Référence";
+          trail = Icons.account_balance_wallet;
+        break;
+        case "designation" :
+          title = "Désignation";
+          trail = Icons.textsms_rounded;
+        break;
+        case "code" :
+          title = "Code";
+          trail = Icons.code;
+          break;
+        case "family" :
+          title = "Famille";
+          trail = Icons.family_restroom;
+          break;
+        case "num" :
+          title = "N°Lot/Serie";
+          trail = Icons.info;
+          break;
         default : add = false;
       }
       if(add)
@@ -101,6 +116,7 @@ class _ItemState extends State<Item>{
           child: new ListTile(
             title: new Text(title),
             subtitle: new Text(v),
+            trailing: Icon(trail),
           ),
         ));
     });
@@ -119,7 +135,7 @@ class _ItemState extends State<Item>{
         keyboardType: TextInputType.number,
       ),
     ));
-    list.add(SizedBox(height: 50.0));
+    list.add(SizedBox(height: 70.0));
     return list;
   }
   @override
@@ -146,9 +162,8 @@ class _ItemState extends State<Item>{
   Future scanQR() async{
     String barcodeScanRes;
     try {
-      barcodeScanRes = await scanner.scan();
+      barcodeScanRes = await Func.scan(context);
       if (!mounted) return;
-      print("done");
       id = barcodeScanRes;
       _initData();
     } catch(e) {

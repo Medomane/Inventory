@@ -86,10 +86,8 @@ class _ItemsState extends State<Items> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
-              margin: EdgeInsets.all(10),
-              padding: EdgeInsets.all(0),
               constraints: BoxConstraints(
-                maxHeight: 700,
+                maxHeight: (MediaQuery. of(context).size.height)-80,
               ),
               child: Card(
                 elevation: 1,

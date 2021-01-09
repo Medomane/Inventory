@@ -84,6 +84,7 @@ class _MyHomePageState extends State<MyHome>{
                       padding: EdgeInsets.fromLTRB(0,30,0,0),
                       child: LineChart(
                         LineChartData(
+                          minY: 0,
                           lineBarsData:linesBarData1(lineData),
                           titlesData: FlTitlesData(
                             bottomTitles: SideTitles(
