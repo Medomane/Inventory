@@ -26,10 +26,10 @@ Inventory Flutter project.
 ![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img14.png?raw=true)&nbsp;&nbsp;
 ![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img15.png?raw=true)
 ### Scanner items
-![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img16.png?raw=true)
-### Synchronization history
+![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img16.png?raw=true)&nbsp;&nbsp;
 ![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img17.png?raw=true)
-### Settings
+### Synchronization history
 ![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img18.png?raw=true)
+### Settings
 ### Report a problem
 ![Drawer](https://github.com/Medomane/Inventory/blob/main/app/img19.png?raw=true)
