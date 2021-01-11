@@ -1,10 +1,5 @@
-import 'dart:convert';
-
-import 'package:Inventory/Helpers/global.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-import 'package:http/http.dart' as http;
 
 import 'Helpers/func.dart';
 import 'Helpers/drawer.dart';
@@ -31,6 +26,7 @@ class _ProblemState extends State<Problem>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Problème"),
       ),
@@ -81,32 +77,7 @@ class _ProblemState extends State<Problem>{
       subjectError = Func.isNull(subject.text);
       messageError = Func.isNull(message.text);
     });
-    if(!subjectError && !messageError){
-      if(!(await Func.checkConnection(_btnController))) return ;
-      var url = await MyGlobal.reportProbUrl();
-      print(url);
-      var obj = '''{
-        "UserId":"${(await MyGlobal.getUserId())}",
-        "Subject":"'''+subject.text.trim()+'''",
-        "Message":"'''+message.text.trim()+'''"
-      }''';
-      Map<String, String> headers = {"Content-type": "application/json"};
-      http.post(url,body:obj,headers: headers).then(
-        (value) async {
-          if (value.statusCode == 200) {
-            Map<String,dynamic> res = jsonDecode(value.body);
-            if(res["Type"].toString() == "error") await Func.showError(_scaffoldKey,res["Content"].toString(),btn: _btnController);
-            else {
-              Fluttertoast.showToast(msg: res["Content"].toString());
-              await _btnController.success();
-            }
-          }
-          else await Func.showError(_scaffoldKey,'Erreur avec le statut: ${value.statusCode} (${value.reasonPhrase}).',btn: _btnController);
-        }
-      ).catchError((error) async {
-        await Func.showError(_scaffoldKey,error.toString(),btn: _btnController);
-      });
-    }
+    if(!subjectError && !messageError) await Func.sendMsg(subject.text, message.text, _scaffoldKey, context, _btnController);
     else await _btnController.stop();
   }
 }

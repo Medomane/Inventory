@@ -76,7 +76,7 @@ class MyGlobal{
   static Future<String> dbPath() async => (await getBasePath()) +'/'+ MyGlobal.dbName;
   static Future<String> loginUrl() async => (await MyGlobal.getServerUrl())+"/login";
   static Future<String> downloadUrl() async => (await MyGlobal.getServerUrl())+"/downloadSqLiteDb";
-  static Future<String> syncUrl() async => (await MyGlobal.getServerUrl())+"/syncData";
+  static Future<String> syncUrl() async => (await MyGlobal.getServerUrl())+"/uploadSqLiteDb";
   static Future<String> reportProbUrl() async => (await MyGlobal.getServerUrl())+"/reportProb";
   //static Future<String> uploadUrl() async => (await MyGlobal.getServerUrl())+"/User/Upload";
   static Future<String> getRoot() async => (await getApplicationDocumentsDirectory()).path;

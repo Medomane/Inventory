@@ -1,6 +1,6 @@
+import 'Helpers/drawer.dart';
 import 'Helpers/global.dart';
 import 'Helpers/sqlite.dart';
-import 'file:///C:/Users/Wizardly/Projects/Inventory/Mobile/lib/Helpers/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';

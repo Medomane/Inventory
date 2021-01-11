@@ -110,13 +110,21 @@ class _ItemState extends State<Item>{
           title = "N°Lot/Serie";
           trail = Icons.info;
           break;
+        case "inStock" :
+          title = "En stock";
+          trail = Icons.move_to_inbox;
+          break;
+        case "salePrice" :
+          title = "Prix de vente";
+          trail = Icons.money;
+          break;
         default : add = false;
       }
       if(add)
         list.add(Card(
           child: new ListTile(
             title: new Text(title),
-            subtitle: new Text(v),
+            subtitle: new Text(v.toString()),
             trailing: Icon(trail),
           ),
         ));
@@ -148,6 +156,7 @@ class _ItemState extends State<Item>{
       var pr = new ProgressDialog(context,isDismissible: false);
       try{
         var qte = double.parse(val.replaceAll(',', '.'));
+        pr.style(message: "Ajout ...");
         await pr.show();
         await SqLite.saveProduct(qte, data["id"]);
         await pr.hide();

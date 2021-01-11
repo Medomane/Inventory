@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:Inventory/home.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import 'Helpers/func.dart';
@@ -53,6 +51,7 @@ class _MyLoginState extends State<MyLogin> {
       )
     );
   }
+
   Future<void> _login(BuildContext context) async {
     if(urlDone){
       setState(() {
@@ -60,32 +59,16 @@ class _MyLoginState extends State<MyLogin> {
         passwordFieldError = Func.isNull(passwordField.text);
       });
       if(!usernameFieldError && !passwordFieldError){
-        if(!await Func.checkConnection(_btnController)) return ;
-        var obj = '''{
-          "username":"${usernameField.text.trim()}",
-          "password":"${passwordField.text.trim()}"
-        }''';
-        http.post(Uri.encodeFull(await MyGlobal.loginUrl()),body: obj,headers: {"Content-type": "application/json"}).then(
-          (value) async {
-            if(value.statusCode == 200){
-              Map<String,dynamic> res = jsonDecode(value.body);
-              if(res["Type"].toString() == "error") await Func.showError(_scaffoldKey,res["Content"].toString(),btn: _btnController);
-              else {
-                if(await Func.downloadDb(_scaffoldKey,btn: _btnController)){
-                  _btnController.success();
-                  Future.delayed(const Duration(seconds: 5), () async {
-                    await MyGlobal.setInfo(res);
-                    await Func.endLoading(btnController: _btnController);
-                    await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => MyHome()));
-                  });
-                }
-              }
-            }
-            else await Func.showError(_scaffoldKey,'Erreur avec le statut: ${value.statusCode}.',btn: _btnController);
+        var res = await Func.login(usernameField.text, passwordField.text, _scaffoldKey, context, _btnController);
+        if(res != null){
+          if(await Func.downloadDb(_scaffoldKey,context, _btnController)){
+            _btnController.success();
+            Future.delayed(const Duration(seconds: 5), () async {
+              await MyGlobal.setInfo(res);
+              await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => MyHome()));
+            });
           }
-        ).catchError((error) async {
-          await Func.showError(_scaffoldKey,error.toString(),btn: _btnController);
-        });
+        }
       }
       else await Func.endLoading(btnController: _btnController);
     }
@@ -94,28 +77,11 @@ class _MyLoginState extends State<MyLogin> {
         serverUrlFieldError = Func.isNull(serverUrlField.text);
       });
       if(!serverUrlFieldError){
-        if(!await Func.checkConnection(_btnController)) return ;
-        var link = Uri.parse(serverUrlField.text);
-        var baseUrl = link.scheme+'://'+link.host;
-        if(link.hasPort) baseUrl += ":${link.port}";
-        http.get(Uri.encodeFull(baseUrl)).timeout(Duration(seconds: 10)).then(
-          (value) async {
-            if (value.statusCode == 200) {
-              Map<String,dynamic> res = jsonDecode(value.body);
-              if(res["Type"].toString() == "success") {
-                await MyGlobal.setServerUrl(baseUrl);
-                setState(() {
-                  urlDone = true;
-                });
-              }
-              else Func.showError(_scaffoldKey, res["Content"].toString());
-            }
-            else Func.showError(_scaffoldKey, "Erreur avec le statut ${value.statusCode} (${value.reasonPhrase})!!!");
-            await Func.endLoading(btnController: _btnController);
-          }
-        ).catchError((error) async {
-          await Func.showError(_scaffoldKey, error.toString(),btn:_btnController);
-        });
+        if(await Func.setUrl(_scaffoldKey, serverUrlField.text, context, _btnController)){
+          setState(() {
+            urlDone = true;
+          });
+        }
       }
       else await Func.endLoading(btnController: _btnController);
     }

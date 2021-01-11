@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_uploader/flutter_uploader.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:responsive_table/DatatableHeader.dart';
 import 'package:responsive_table/responsive_table.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -27,6 +24,7 @@ class _SyncPageState extends State<SyncPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Synchronisation"),
       ),
@@ -106,32 +104,9 @@ class _SyncPageState extends State<SyncPage>{
     return _headers;
   }
   void synchronize() async {
-    if(!(await Func.checkConnection(_btnController))) return ;
-    var pr = new ProgressDialog(context,isDismissible: false);
-    await pr.show();
-    await SqLite.freeDb();
-    final uploader = FlutterUploader();
-    await uploader.enqueue(
-      url: await MyGlobal.syncUrl(),
-      files: [FileItem(filename: MyGlobal.dbName, savedDir: (await MyGlobal.getBasePath()), fieldname:"file")],
-      method: UploadMethod.POST,
-      headers: {"Authorization": "${(await MyGlobal.getUsername())} ${(await MyGlobal.getPassword())}"},
-      showNotification: false
-    );
-    uploader.result.listen((event) async {
-      if(event.statusCode == 200){
-        if(await Func.downloadDb(_scaffoldKey,btn: _btnController)){
-          _btnController.success();
-          Future.delayed(const Duration(seconds: 5), () async {
-            await Func.endLoading(btnController: _btnController,pd: pr);
-            await Fluttertoast.showToast(msg: "Opération s'est déroulée avec succès",toastLength:Toast.LENGTH_LONG);
-            _init();
-          });
-        }
-      }
-      else Func.showError(_scaffoldKey, "Erreur avec le statut ${event.statusCode}!!!");
-    },onError: (e) async {
-      await Func.showError(_scaffoldKey,e.toString(),btn: _btnController,pd: pr);
-    });
+    if(await Func.refreshData(_scaffoldKey, context, _btnController)){
+      await Func.endLoading(btnController: _btnController);
+      _init();
+    }
   }
 }

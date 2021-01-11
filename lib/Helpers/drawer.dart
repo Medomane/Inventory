@@ -23,6 +23,8 @@ class AppDrawer extends StatelessWidget {
           Divider(height: 0,color: Colors.blue,),
           _createDrawerItem(icon: Icons.article, text: 'Articles',context: context,widget: Items()),
           Divider(height: 0,color: Colors.blue,),
+          _createDrawerItem(icon: Icons.scanner, text: 'Scanner un article',context: context,widget: Item(null,true)),
+          Divider(height: 0,color: Colors.blue,),
           _createDrawerItem(icon: Icons.inventory, text: 'Inventaire',context: context,widget: Item(null,true)),
           Divider(height: 0,color: Colors.blue,),
           _createDrawerItem(icon: Icons.move_to_inbox_sharp, text: 'Stocks',widget: StockPage(),context: context),

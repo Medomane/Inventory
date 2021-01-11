@@ -37,6 +37,14 @@ class _ItemsState extends State<Items> {
     DatatableHeader(
       value: "num",
       headerBuilder: (value) => Func.hTxt("N°Lot/Serie")
+    ),
+    DatatableHeader(
+        value: "salePrice",
+        headerBuilder: (value) => Func.hTxt("Prix de vente")
+    ),
+    DatatableHeader(
+        value: "inStock",
+        headerBuilder: (value) => Func.hTxt("En stock")
     )
   ];
   bool _isSearch = false;
@@ -54,7 +62,7 @@ class _ItemsState extends State<Items> {
         case WHEN length(designation) > $length THEN (substr(designation,0,$length) || ' ...') ELSE designation END designation ,
         case WHEN length(num) > $length THEN (substr(num,0,$length) || ' ...') ELSE num END num ,
         case WHEN length(family) > $length THEN (substr(family,0,$length) || ' ...') ELSE family END family ,
-        code,id from item''';
+        code,id,inStock,salePrice from item''';
       if(!Func.isNull(str)) query += " WHERE code like '%" + str + "%' or reference like '%" + str + "%' or designation like '%" + str + "%' or num like '%" + str + "%' or family like '%" + str + "%' ";
       var data = await SqLite.select(query);
       _source.addAll(data);
