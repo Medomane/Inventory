@@ -18,6 +18,7 @@ class _ProblemState extends State<Problem>{
   final message = TextEditingController();
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
   bool subjectError = false,messageError = false;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -94,24 +95,16 @@ class _ProblemState extends State<Problem>{
         (value) async {
           if (value.statusCode == 200) {
             Map<String,dynamic> res = jsonDecode(value.body);
-            if(res["Type"].toString() == "error") {
-              await _btnController.stop();
-              Func.errorToast(res["Content"].toString());
-            }
+            if(res["Type"].toString() == "error") await Func.showError(_scaffoldKey,res["Content"].toString(),btn: _btnController);
             else {
               Fluttertoast.showToast(msg: res["Content"].toString());
               await _btnController.success();
             }
           }
-          else {
-            await _btnController.stop();
-            Func.errorToast('Erreur avec le statut: ${value.statusCode}.');
-            print(value.reasonPhrase);
-          }
+          else await Func.showError(_scaffoldKey,'Erreur avec le statut: ${value.statusCode} (${value.reasonPhrase}).',btn: _btnController);
         }
       ).catchError((error) async {
-        await _btnController.stop();
-        Func.errorToast(error.toString());
+        await Func.showError(_scaffoldKey,error.toString(),btn: _btnController);
       });
     }
     else await _btnController.stop();

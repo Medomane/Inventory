@@ -17,6 +17,7 @@ class _SettingState extends State<Setting>{
   final serverUrlField = TextEditingController();
   bool serverUrlFieldError = false;
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState(){
     super.initState();
@@ -161,15 +162,13 @@ class _SettingState extends State<Setting>{
               });
               return ;
             }
-            else Func.errorToast("Erreur !!!");
+            else Func.showError(_scaffoldKey, res["Content"].toString());
           }
-          else Func.errorToast("Erreur ${value.statusCode} (${value.reasonPhrase})!!!");
+          else Func.showError(_scaffoldKey, "Erreur avec le statut ${value.statusCode} (${value.reasonPhrase})!!!");
           await Func.endLoading(btnController: _btnController);
         }
       ).catchError((error) async {
-        Func.errorToast("Erreur.");
-        await Func.endLoading(btnController: _btnController);
-        print(error.toString());
+        await Func.showError(_scaffoldKey, error.toString(),btn:_btnController);
       });
     }
     else await Func.endLoading(btnController: _btnController);

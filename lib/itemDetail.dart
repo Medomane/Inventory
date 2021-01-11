@@ -23,6 +23,7 @@ class _ItemState extends State<Item>{
   bool isScanner;
   bool _isLoading = true,_notFound = false;
   final quantityField = TextEditingController();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   _ItemState(this.id,this.isScanner);
   @override
   Widget build(BuildContext context) {
@@ -153,8 +154,7 @@ class _ItemState extends State<Item>{
         await Fluttertoast.showToast(msg: "Opération s'est déroulée avec succès",toastLength:Toast.LENGTH_LONG);
       }
       catch(ex){
-        pr.hide();
-        Func.errorToast(ex.toString());
+        await Func.showError(_scaffoldKey,ex.toString(),pd: pr);
       }
     }
   }

@@ -22,6 +22,7 @@ class SyncPage extends StatefulWidget {
 class _SyncPageState extends State<SyncPage>{
   List<Map<String, dynamic>> _source = List<Map<String, dynamic>>();
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isLoading = true;
   @override
   Widget build(BuildContext context) {
@@ -119,7 +120,7 @@ class _SyncPageState extends State<SyncPage>{
     );
     uploader.result.listen((event) async {
       if(event.statusCode == 200){
-        if(await Func.downloadDb()){
+        if(await Func.downloadDb(_scaffoldKey,btn: _btnController)){
           _btnController.success();
           Future.delayed(const Duration(seconds: 5), () async {
             await Func.endLoading(btnController: _btnController,pd: pr);
@@ -127,12 +128,10 @@ class _SyncPageState extends State<SyncPage>{
             _init();
           });
         }
-        else await Func.endLoading(btnController: _btnController);
       }
-      else Func.errorToast('Erreur avec le statut: ${event.statusCode}.');
+      else Func.showError(_scaffoldKey, "Erreur avec le statut ${event.statusCode}!!!");
     },onError: (e) async {
-      await Func.endLoading(btnController: _btnController,pd: pr);
-      Func.errorToast(e.toString());
+      await Func.showError(_scaffoldKey,e.toString(),btn: _btnController,pd: pr);
     });
   }
 }

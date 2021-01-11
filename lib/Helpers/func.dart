@@ -17,7 +17,16 @@ class Func{
     if(s == null) return false;
     return double.parse(s, (e) => null) != null;
   }
-  static void errorToast(String content) => Fluttertoast.showToast(msg: content,backgroundColor: Colors.red,textColor: Colors.white,toastLength:Toast.LENGTH_LONG );
+  static Future<void> showError(GlobalKey<ScaffoldState> key,String error,{RoundedLoadingButtonController btn,ProgressDialog pd}) async {
+    key.currentState.showSnackBar(SnackBar(
+      duration: const Duration(seconds: 30),
+      content: Text(error),
+      backgroundColor: Colors.red,
+    ));
+    if(btn != null) await btn.stop();
+    if(pd != null) await pd.hide();
+  }
+  static void _errorToast(String content) => Fluttertoast.showToast(msg: content,backgroundColor: Colors.red,textColor: Colors.white,toastLength:Toast.LENGTH_LONG );
   static bool isNull(String val) => val == null || val.trim() == "" || val.trim() == "null";
   static Future<void> updateBaseFolder() async {
     final String _appDocDir = await MyGlobal.getRoot();
@@ -57,7 +66,7 @@ class Func{
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) return true;
     } on SocketException catch (_) {
-      errorToast("Pas de connexion !!!");
+      _errorToast("Pas de connexion !!!");
       return false;
     }
     return true;
@@ -106,17 +115,7 @@ class Func{
     if(pd != null) await pd.hide();
   }
 
-  static Future<bool> downloadDb() async {
-    /*await FlutterDownloader.enqueue(
-      url: await MyGlobal.downloadUrl(),
-      savedDir: (await MyGlobal.getBasePath()),
-      showNotification: false,
-      openFileFromNotification: false,
-      fileName: MyGlobal.dbName
-    );
-    FlutterDownloader.registerCallback(_callback);
-    var task = (await FlutterDownloader.loadTasks())[0];
-    return '${task.savedDir}/${task.filename}';*/
+  static Future<bool> downloadDb(GlobalKey<ScaffoldState> key,{RoundedLoadingButtonController btn,ProgressDialog pd}) async {
     try{
       await Func.updateBaseFolder();
       var httpClient = new HttpClient();
@@ -128,11 +127,10 @@ class Func{
       String dir = (await MyGlobal.getBasePath());
       File file = new File('$dir/${MyGlobal.dbName}');
       await file.writeAsBytes(bytes);
-      //return file.path;
       return true;
     }
     catch(er){
-      Func.errorToast(er.toString());
+      Func.showError(key,er.toString());
       return false;
     }
   }

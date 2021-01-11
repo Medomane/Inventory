@@ -25,6 +25,7 @@ class _MyLoginState extends State<MyLogin> {
   final serverUrlField = TextEditingController();
   bool usernameFieldError = false,passwordFieldError = false,serverUrlFieldError = false,urlDone=false;
   final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -37,8 +38,8 @@ class _MyLoginState extends State<MyLogin> {
 
   @override
   Widget build(BuildContext context) {
-    //Func.endLoading(btnController: _btnController);
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
@@ -68,9 +69,9 @@ class _MyLoginState extends State<MyLogin> {
           (value) async {
             if(value.statusCode == 200){
               Map<String,dynamic> res = jsonDecode(value.body);
-              if(res["Type"].toString() == "error") Func.errorToast(res["Content"].toString());
+              if(res["Type"].toString() == "error") await Func.showError(_scaffoldKey,res["Content"].toString(),btn: _btnController);
               else {
-                if(await Func.downloadDb()){
+                if(await Func.downloadDb(_scaffoldKey,btn: _btnController)){
                   _btnController.success();
                   Future.delayed(const Duration(seconds: 5), () async {
                     await MyGlobal.setInfo(res);
@@ -78,15 +79,12 @@ class _MyLoginState extends State<MyLogin> {
                     await Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => MyHome()));
                   });
                 }
-                else await Func.endLoading(btnController: _btnController);
               }
             }
-            else Func.errorToast('Erreur avec le statut: ${value.statusCode}.');
+            else await Func.showError(_scaffoldKey,'Erreur avec le statut: ${value.statusCode}.',btn: _btnController);
           }
         ).catchError((error) async {
-          await Func.endLoading(btnController: _btnController);
-          Func.errorToast("Erreur.");
-          print(error.toString());
+          await Func.showError(_scaffoldKey,error.toString(),btn: _btnController);
         });
       }
       else await Func.endLoading(btnController: _btnController);
@@ -110,15 +108,13 @@ class _MyLoginState extends State<MyLogin> {
                   urlDone = true;
                 });
               }
-              else Func.errorToast("Erreur !!!");
+              else Func.showError(_scaffoldKey, res["Content"].toString());
             }
-            else Func.errorToast("Erreur ${value.statusCode} (${value.reasonPhrase})!!!");
+            else Func.showError(_scaffoldKey, "Erreur avec le statut ${value.statusCode} (${value.reasonPhrase})!!!");
             await Func.endLoading(btnController: _btnController);
           }
         ).catchError((error) async {
-          Func.errorToast("Erreur.");
-          await Func.endLoading(btnController: _btnController);
-          print(error.toString());
+          await Func.showError(_scaffoldKey, error.toString(),btn:_btnController);
         });
       }
       else await Func.endLoading(btnController: _btnController);
